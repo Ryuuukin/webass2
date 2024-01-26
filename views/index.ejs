@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Weather App</title>
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Aruzhan Kineshova Weather App</h1>
+      <form action="/weather" method="get">
+        <input type="text" name="city" placeholder="Enter city name" />
+        <button type="submit">Get Weather</button>
+      </form>
+      <% if (locals.error) { %>
+        <p class="error"><%= locals.error %></p>
+      <% } else if (locals.weather) { %>        
+        <div class="card">
+          <p>
+              <i class="fas fa-thermometer-half"></i>
+              <%= locals.weather.main.temp %>&deg;F
+          </p>
+          <p>
+              <i class="fas fa-cloud"></i>
+              <%= locals.weather.weather[0].main %>
+          </p>
+          <p>
+              <i class="fas fa-map-marker-alt"></i>
+              <%= locals.weather.name %>, <%= locals.weather.sys.country %>
+          </p>
+          <p>
+              <i class="fas fa-tint"></i>
+              Humidity: <%= locals.weather.main.humidity %>%
+          </p>
+          <p>
+              <i class="fas fa-tachometer-alt"></i>
+              Pressure: <%= locals.weather.main.pressure %> hPa
+          </p>
+          <p>
+              <i class="fas fa-wind"></i>
+              Wind Speed: <%= locals.weather.wind.speed %> m/s
+          </p>
+          <p>
+              <i class="fas fa-thermometer-full"></i>
+              Feels Like: <%= locals.weather.main.feels_like %>&deg;F
+          </p>
+          <p>
+              <i class="fas fa-location-arrow"></i>
+              Coordinates: <%= locals.weather.coord.lat %>, <%= locals.weather.coord.lon %>
+          </p>
+          <% if (locals.weather.rain) { %>
+              <p>
+                  <i class="fas fa-umbrella"></i>
+                  Rain Volume (last 3 hours): <%= locals.weather.rain['3h'] %> mm
+              </p>
+          <% } else { %>
+              <p>
+                  <i class="fas fa-umbrella"></i>
+                  Rain Volume (last 3 hours): N/A
+              </p>
+          <% } %>
+          <iframe src="<%= `https://openweathermap.org/weathermap?basemap=map&cities=false&layer=temperature&lat=${locals.weather.coord.lat}&lon=${locals.weather.coord.lon}&zoom=10` %>" width="500" height="500" frameborder="0" style="border:0; border-radius: 10px;" allowfullscreen></iframe>
+
+          <% if (locals.exchangeRates) { %>
+            <div class="card">
+              <h2>Currency Exchange Rates</h2>
+              <ul>
+                <% for (const [currency, rate] of Object.entries(locals.exchangeRates)) { %>
+                  <li><%= currency %>: <%= rate %></li>
+                <% } %>
+              </ul>
+            </div>
+          <% } %>
+
+          <% if (locals.cryptoData) { %>
+            <div class="card">
+              <h2>Cryptocurrency Data</h2>
+              <p>
+                <i class="fab fa-bitcoin"></i>
+                Bitcoin Price: <%= locals.cryptoData.bitcoin.usd %> USD
+              </p>
+            </div>
+          <% } %>
+
+      </div>
+      <% } %>
+    </div>
+  </body>
+</html>
